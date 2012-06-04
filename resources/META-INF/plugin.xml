@@ -1,0 +1,14 @@
+<idea-plugin url="http://www.jetbrains.com/idea">
+    <name>PluginPrototype</name>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <projectViewPane implementation="com.github.dmalch.ColorIdeViewPane"/>
+    </extensions>
+
+    <project-components>
+        <component>
+            <interface-class>com.intellij.openapi.components.ProjectComponent</interface-class>
+            <implementation-class>com.github.dmalch.ColorIdeProjectComponent</implementation-class>
+        </component>
+    </project-components>
+</idea-plugin>

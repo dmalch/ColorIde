@@ -1,5 +1,19 @@
-<idea-plugin url="http://www.jetbrains.com/idea">
-    <name>PluginPrototype</name>
+<idea-plugin>
+    <name>Color Ide</name>
+
+    <id>ColorIde</id>
+
+    <description>Applies editor background color to project tree view</description>
+
+    <change-notes>Fixed compatibility with other IDEs</change-notes>
+
+    <version>1.1</version>
+
+    <idea-version since-build="111.69"/>
+
+    <vendor url="https://github.com/dmalch/ColorIde">Dmitry Malchikov</vendor>
+
+    <depends>com.intellij.modules.lang</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <projectViewPane implementation="com.github.dmalch.ColorIdeViewPane"/>

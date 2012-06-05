@@ -2,7 +2,6 @@ package com.github.dmalch;
 
 import com.intellij.ide.projectView.impl.ProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectViewTree;
-import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.project.Project;
@@ -10,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.*;
 
 public class ColorIdeProjectViewPane extends ProjectViewPane {
 
@@ -36,9 +34,8 @@ public class ColorIdeProjectViewPane extends ProjectViewPane {
     public static JTree colorizeTree(final JTree tree) {
         final EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
 
-        final Color color = globalScheme.getColor(EditorColors.CARET_COLOR);
         tree.setBackground(globalScheme.getDefaultBackground());
-        tree.setForeground(color);
+        tree.setForeground(globalScheme.getDefaultForeground());
         return tree;
     }
 }

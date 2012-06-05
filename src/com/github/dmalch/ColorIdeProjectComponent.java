@@ -1,5 +1,6 @@
 package com.github.dmalch;
 
+import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
 import com.intellij.openapi.components.ProjectComponent;
@@ -16,9 +17,11 @@ public class ColorIdeProjectComponent implements ProjectComponent {
         this.project = project;
     }
 
+    @Override
     public void initComponent() {
     }
 
+    @Override
     public void disposeComponent() {
     }
 
@@ -27,18 +30,32 @@ public class ColorIdeProjectComponent implements ProjectComponent {
         return "ColorIdeProjectComponent";
     }
 
+    @Override
     public void projectOpened() {
+        replaceStandardProjectViewWithColored();
+    }
+
+    private void replaceStandardProjectViewWithColored() {
         final ExtensionsArea area = Extensions.getArea(project);
         final ExtensionPoint<AbstractProjectViewPane> extensionPoint = area.getExtensionPoint(AbstractProjectViewPane.EP_NAME);
-        final AbstractProjectViewPane[] extensions = extensionPoint.getExtensions();
 
-        for (AbstractProjectViewPane extension : extensions) {
-            if ((extension instanceof ProjectViewPane) && !(extension instanceof ColorIdeViewPane)) {
+        for (AbstractProjectViewPane extension : extensionPoint.getExtensions()) {
+            if ((extension instanceof ProjectViewPane) && !(extension instanceof ColorIdeProjectViewPane)) {
                 extensionPoint.unregisterExtension(extension);
             }
         }
+
+        removeStandardProjectViewPaneIfExists();
     }
 
+    private void removeStandardProjectViewPaneIfExists() {
+        final AbstractProjectViewPane projectViewPane = ProjectView.getInstance(project).getProjectViewPaneById(ProjectViewPane.ID);
+        if (projectViewPane != null) {
+            ProjectView.getInstance(project).removeProjectPane(projectViewPane);
+        }
+    }
+
+    @Override
     public void projectClosed() {
     }
 }

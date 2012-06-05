@@ -6,14 +6,24 @@ import com.intellij.openapi.editor.colors.EditorColors;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 
-public class ColorIdeViewPane extends ProjectViewPane {
-    public ColorIdeViewPane(Project project) {
+public class ColorIdeProjectViewPane extends ProjectViewPane {
+
+    public static final String COLOR_IDE_PROJECT_VIEW_PANE = "ColorIdeProjectViewPane";
+
+    public ColorIdeProjectViewPane(Project project) {
         super(project);
+    }
+
+    @NotNull
+    @Override
+    public String getId() {
+        return COLOR_IDE_PROJECT_VIEW_PANE;
     }
 
     @Override

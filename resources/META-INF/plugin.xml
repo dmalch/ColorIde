@@ -5,9 +5,9 @@
 
     <description>Applies editor background color to project tree view</description>
 
-    <change-notes>Fixed compatibility with other IDEs</change-notes>
+    <change-notes>Fixed compatibility with PHP Storm</change-notes>
 
-    <version>1.1</version>
+    <version>1.2</version>
 
     <idea-version since-build="111.69"/>
 
@@ -15,14 +15,13 @@
 
     <depends>com.intellij.modules.lang</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <projectViewPane implementation="com.github.dmalch.ColorIdeViewPane"/>
-    </extensions>
-
     <project-components>
         <component>
-            <interface-class>com.intellij.openapi.components.ProjectComponent</interface-class>
             <implementation-class>com.github.dmalch.ColorIdeProjectComponent</implementation-class>
         </component>
     </project-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <projectViewPane implementation="com.github.dmalch.ColorIdeProjectViewPane"/>
+    </extensions>
 </idea-plugin>

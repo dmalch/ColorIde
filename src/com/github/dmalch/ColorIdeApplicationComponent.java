@@ -13,7 +13,10 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
 
     public void initComponent() {
         final EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
+        UIManager.put("Tree.textForeground", globalScheme.getDefaultForeground());
         UIManager.put("Viewport.foreground", globalScheme.getDefaultForeground());
+        UIManager.put("Tree.textBackground", globalScheme.getDefaultBackground());
+        UIManager.put("List.background", globalScheme.getDefaultBackground());
         UIManager.put("Tree.background", globalScheme.getDefaultBackground());
     }
 

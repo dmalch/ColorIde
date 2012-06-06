@@ -5,9 +5,9 @@
 
     <description>Applies editor background color to all tree views</description>
 
-    <change-notes>Partially fixed settings rendering</change-notes>
+    <change-notes>Fixed list foreground</change-notes>
 
-    <version>2.1</version>
+    <version>2.2</version>
 
     <idea-version since-build="111.69"/>
 

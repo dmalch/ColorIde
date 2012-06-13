@@ -5,11 +5,11 @@
 
     <description>Applies editor background color to all tree views</description>
 
-    <change-notes>Fixed list foreground</change-notes>
+    <change-notes>Added support of idea 10.5</change-notes>
 
-    <version>2.2</version>
+    <version>2.3</version>
 
-    <idea-version since-build="111.69"/>
+    <idea-version since-build="107.105"/>
 
     <vendor url="https://github.com/dmalch/ColorIde">Dmitry Malchikov</vendor>
 

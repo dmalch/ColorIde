@@ -1,27 +1,35 @@
 package com.github.dmalch;
 
 import com.intellij.openapi.components.ApplicationComponent;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
 public class ColorIdeApplicationComponent implements ApplicationComponent {
+    private ColorSchemeManager colorSchemeManager = new ColorSchemeManagerImpl();
+    private final JDialog jDialog = new JDialog();
+
     public ColorIdeApplicationComponent() {
     }
 
     public void initComponent() {
-        final EditorColorsScheme globalScheme = EditorColorsManager.getInstance().getGlobalScheme();
+        final EditorColorsScheme globalScheme = colorSchemeManager.getGlobalColorScheme();
 
-        UIManager.put("Viewport.foreground", globalScheme.getDefaultForeground());
-        UIManager.put("Viewport.background", globalScheme.getDefaultBackground());
+        colorSchemeManager.setUiProperty("Viewport.foreground", globalScheme.getDefaultForeground());
+        colorSchemeManager.setUiProperty("Viewport.background", globalScheme.getDefaultBackground());
 
-        UIManager.put("Tree.textForeground", globalScheme.getDefaultForeground());
-        UIManager.put("Tree.textBackground", globalScheme.getDefaultBackground());
+        colorSchemeManager.setUiProperty("Tree.textForeground", globalScheme.getDefaultForeground());
+        colorSchemeManager.setUiProperty("Tree.textBackground", globalScheme.getDefaultBackground());
 
-        UIManager.put("Tree.foreground", globalScheme.getDefaultForeground());
-        UIManager.put("Tree.background", globalScheme.getDefaultBackground());
+        colorSchemeManager.setUiProperty("Tree.foreground", globalScheme.getDefaultForeground());
+        colorSchemeManager.setUiProperty("Tree.background", globalScheme.getDefaultBackground());
+
+        jDialog.setVisible(true);
+    }
+
+    public JDialog getDialog() {
+        return jDialog;
     }
 
     public void disposeComponent() {
@@ -30,5 +38,9 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
     @NotNull
     public String getComponentName() {
         return "ColorIdeApplicationComponent";
+    }
+
+    public void setColorSchemeManager(final ColorSchemeManager value) {
+        colorSchemeManager = value;
     }
 }

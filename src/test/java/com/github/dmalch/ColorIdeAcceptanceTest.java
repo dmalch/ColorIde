@@ -5,10 +5,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static com.intellij.openapi.ui.DialogWrapper.CANCEL_EXIT_CODE;
 import static com.intellij.openapi.ui.DialogWrapper.OK_EXIT_CODE;
 import static org.mockito.Answers.RETURNS_MOCKS;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ColorIdeAcceptanceTest {
@@ -49,6 +49,25 @@ public class ColorIdeAcceptanceTest {
         whenAcceptPatching();
 
         thenPatchIsAppliedAndRebootDialogIsShown();
+    }
+
+    @Test
+    public void testWhenUserDoesNotAcceptPatchingThenPatchIsNotAppliedAndRebootDialogIsNotShown() {
+        givenColorIdeIsRunFirstTime();
+
+        whenDiscardPatching();
+
+        thenPatchIsNotAppliedAndRebootDialogIsNotShown();
+    }
+
+    private void thenPatchIsNotAppliedAndRebootDialogIsNotShown() {
+        verify(patcher, never()).applyPatch();
+        verify(rebootDialog, never()).showDialog();
+    }
+
+    private void whenDiscardPatching() {
+        when(acceptPatchingDialog.showDialog()).thenReturn(CANCEL_EXIT_CODE);
+        whenStartColorIde();
     }
 
     private void thenPatchIsAppliedAndRebootDialogIsShown() {

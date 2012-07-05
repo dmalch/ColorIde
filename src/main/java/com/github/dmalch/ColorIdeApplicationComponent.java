@@ -28,12 +28,16 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
         applyColorSchemeColorsToTree();
 
         if (shouldShowPatchDialog()) {
-            if (Objects.equal(OK_EXIT_CODE, acceptPatchingDialog.showDialog())) {
+            if (userWantsToPatchClasses()) {
                 patcher.applyPatch();
                 doNotShowPatchDialogAnyMore();
                 rebootDialog.showDialog();
             }
         }
+    }
+
+    private boolean userWantsToPatchClasses() {
+        return Objects.equal(OK_EXIT_CODE, acceptPatchingDialog.showDialog());
     }
 
     private void applyColorSchemeColorsToTree() {

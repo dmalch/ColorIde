@@ -9,6 +9,8 @@ import static com.intellij.openapi.ui.DialogWrapper.OK_EXIT_CODE;
 
 public class ColorIdeApplicationComponent implements ApplicationComponent {
 
+    public static final String SHOW_PATCH_DIALOG = "showPatchDialog";
+
     private ColorSchemeManager colorSchemeManager = new ColorSchemeManagerImpl();
 
     private PersistenceManager persistenceManager = new PersistenceManagerImpl();
@@ -37,13 +39,18 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
         if (shouldShowPatchDialog()) {
             if (Objects.equal(OK_EXIT_CODE, acceptPatchingDialog.showDialog())) {
                 patcher.applyPatch();
+                doNotShowPatchDialogAnyMore();
                 rebootDialog.showDialog();
             }
         }
     }
 
+    private void doNotShowPatchDialogAnyMore() {
+        persistenceManager.setBoolean(SHOW_PATCH_DIALOG, false);
+    }
+
     private boolean shouldShowPatchDialog() {
-        return persistenceManager.getBoolean("showPatchDialog", true);
+        return persistenceManager.getBoolean(SHOW_PATCH_DIALOG, true);
     }
 
     public AcceptPatchingDialog getAcceptPatchingDialog() {

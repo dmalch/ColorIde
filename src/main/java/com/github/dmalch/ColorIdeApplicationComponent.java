@@ -1,6 +1,6 @@
 package com.github.dmalch;
 
-import com.google.gwt.thirdparty.guava.common.base.Objects;
+import com.google.common.base.Objects;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import org.jetbrains.annotations.NotNull;

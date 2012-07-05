@@ -4,11 +4,10 @@ import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
 public class ColorIdeApplicationComponent implements ApplicationComponent {
     private ColorSchemeManager colorSchemeManager = new ColorSchemeManagerImpl();
-    private final JDialog jDialog = new JDialog();
+    private AcceptPatchingDialog acceptPatchingDialog = new AcceptPatchingDialog();
+    private RebootDialog rebootDialog = new RebootDialog();
 
     public ColorIdeApplicationComponent() {
     }
@@ -25,11 +24,12 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
         colorSchemeManager.setUiProperty("Tree.foreground", globalScheme.getDefaultForeground());
         colorSchemeManager.setUiProperty("Tree.background", globalScheme.getDefaultBackground());
 
-        jDialog.setVisible(true);
+        acceptPatchingDialog.showDialog();
+        rebootDialog.showDialog();
     }
 
-    public JDialog getDialog() {
-        return jDialog;
+    public AcceptPatchingDialog getAcceptPatchingDialog() {
+        return acceptPatchingDialog;
     }
 
     public void disposeComponent() {
@@ -42,5 +42,17 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
 
     public void setColorSchemeManager(final ColorSchemeManager value) {
         colorSchemeManager = value;
+    }
+
+    public void setAcceptPatchingDialog(final AcceptPatchingDialog acceptPatchingDialog) {
+        this.acceptPatchingDialog = acceptPatchingDialog;
+    }
+
+    public RebootDialog getRebootDialog() {
+        return rebootDialog;
+    }
+
+    public void setRebootDialog(final RebootDialog rebootDialog) {
+        this.rebootDialog = rebootDialog;
     }
 }

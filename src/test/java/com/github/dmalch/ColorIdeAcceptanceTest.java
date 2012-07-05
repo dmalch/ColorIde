@@ -22,6 +22,9 @@ public class ColorIdeAcceptanceTest {
     @Mock(answer = RETURNS_MOCKS)
     private ColorSchemeManager colorSchemeManager;
 
+    @Mock(answer = RETURNS_MOCKS)
+    private PersistenceManager persistenceManager;
+
     @Mock
     private ColorIdePatcher patcher;
 
@@ -60,6 +63,23 @@ public class ColorIdeAcceptanceTest {
         thenPatchIsNotAppliedAndRebootDialogIsNotShown();
     }
 
+    @Test
+    public void testUserDialogIsNotShownAfterFirstRun() throws Exception {
+        givenColorIdeIsRunAfterFirstTime();
+
+        whenStartColorIde();
+
+        thenDialogIsNotShown();
+    }
+
+    private void thenDialogIsNotShown() {
+        verify(acceptPatchingDialog, never()).showDialog();
+    }
+
+    private void givenColorIdeIsRunAfterFirstTime() {
+        when(persistenceManager.getBoolean("showPatchDialog", true)).thenReturn(false);
+    }
+
     private void thenPatchIsNotAppliedAndRebootDialogIsNotShown() {
         verify(patcher, never()).applyPatch();
         verify(rebootDialog, never()).showDialog();
@@ -89,5 +109,6 @@ public class ColorIdeAcceptanceTest {
     }
 
     private void givenColorIdeIsRunFirstTime() {
+        when(persistenceManager.getBoolean("showPatchDialog", true)).thenReturn(true);
     }
 }

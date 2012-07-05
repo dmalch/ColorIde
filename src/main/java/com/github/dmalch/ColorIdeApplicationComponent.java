@@ -8,7 +8,10 @@ import org.jetbrains.annotations.NotNull;
 import static com.intellij.openapi.ui.DialogWrapper.OK_EXIT_CODE;
 
 public class ColorIdeApplicationComponent implements ApplicationComponent {
+
     private ColorSchemeManager colorSchemeManager = new ColorSchemeManagerImpl();
+
+    private PersistenceManager persistenceManager = new PersistenceManagerImpl();
 
     private AcceptPatchingDialog acceptPatchingDialog = new AcceptPatchingDialog();
 
@@ -31,10 +34,16 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
         colorSchemeManager.setUiProperty("Tree.foreground", globalScheme.getDefaultForeground());
         colorSchemeManager.setUiProperty("Tree.background", globalScheme.getDefaultBackground());
 
-        if (Objects.equal(OK_EXIT_CODE, acceptPatchingDialog.showDialog())) {
-            patcher.applyPatch();
-            rebootDialog.showDialog();
+        if (shouldShowPatchDialog()) {
+            if (Objects.equal(OK_EXIT_CODE, acceptPatchingDialog.showDialog())) {
+                patcher.applyPatch();
+                rebootDialog.showDialog();
+            }
         }
+    }
+
+    private boolean shouldShowPatchDialog() {
+        return persistenceManager.getBoolean("showPatchDialog", true);
     }
 
     public AcceptPatchingDialog getAcceptPatchingDialog() {
@@ -71,5 +80,13 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
 
     public void setPatcher(final ColorIdePatcher patcher) {
         this.patcher = patcher;
+    }
+
+    public PersistenceManager getPersistenceManager() {
+        return persistenceManager;
+    }
+
+    public void setPersistenceManager(final PersistenceManager persistenceManager) {
+        this.persistenceManager = persistenceManager;
     }
 }

@@ -1,13 +1,20 @@
 package com.github.dmalch;
 
+import com.google.gwt.thirdparty.guava.common.base.Objects;
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.editor.colors.EditorColorsScheme;
 import org.jetbrains.annotations.NotNull;
 
+import static com.intellij.openapi.ui.DialogWrapper.OK_EXIT_CODE;
+
 public class ColorIdeApplicationComponent implements ApplicationComponent {
     private ColorSchemeManager colorSchemeManager = new ColorSchemeManagerImpl();
+
     private AcceptPatchingDialog acceptPatchingDialog = new AcceptPatchingDialog();
+
     private RebootDialog rebootDialog = new RebootDialog();
+
+    private ColorIdePatcher patcher = new ColorIdePatcher();
 
     public ColorIdeApplicationComponent() {
     }
@@ -24,8 +31,10 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
         colorSchemeManager.setUiProperty("Tree.foreground", globalScheme.getDefaultForeground());
         colorSchemeManager.setUiProperty("Tree.background", globalScheme.getDefaultBackground());
 
-        acceptPatchingDialog.showDialog();
-        rebootDialog.showDialog();
+        if (Objects.equal(OK_EXIT_CODE, acceptPatchingDialog.showDialog())) {
+            patcher.applyPatch();
+            rebootDialog.showDialog();
+        }
     }
 
     public AcceptPatchingDialog getAcceptPatchingDialog() {
@@ -54,5 +63,13 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
 
     public void setRebootDialog(final RebootDialog rebootDialog) {
         this.rebootDialog = rebootDialog;
+    }
+
+    public ColorIdePatcher getPatcher() {
+        return patcher;
+    }
+
+    public void setPatcher(final ColorIdePatcher patcher) {
+        this.patcher = patcher;
     }
 }

@@ -22,6 +22,9 @@ public class ColorIdeAcceptanceTest {
     @Mock(answer = RETURNS_MOCKS)
     private ColorSchemeManager colorSchemeManager;
 
+    @Mock
+    private ColorIdePatcher patcher;
+
     @InjectMocks
     private final ColorIdeApplicationComponent colorIdeApplicationComponent = new ColorIdeApplicationComponent();
 
@@ -49,6 +52,7 @@ public class ColorIdeAcceptanceTest {
     }
 
     private void thenPatchIsAppliedAndRebootDialogIsShown() {
+        verify(patcher).applyPatch();
         verify(rebootDialog).showDialog();
     }
 

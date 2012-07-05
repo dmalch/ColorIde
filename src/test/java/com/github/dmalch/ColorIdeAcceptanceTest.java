@@ -17,7 +17,7 @@ public class ColorIdeAcceptanceTest {
     private AcceptPatchingDialog acceptPatchingDialog;
 
     @Mock
-    private RebootDialog rebootDialog;
+    private ApplicationRestarter applicationRestarter;
 
     @Mock(answer = RETURNS_MOCKS)
     private ColorSchemeManager colorSchemeManager;
@@ -82,7 +82,7 @@ public class ColorIdeAcceptanceTest {
 
     private void thenPatchIsNotAppliedAndRebootDialogIsNotShown() {
         verify(patcher, never()).applyPatch();
-        verify(rebootDialog, never()).showDialog();
+        verify(applicationRestarter, never()).restart();
         verify(persistenceManager).setBoolean("showPatchDialog", false);
     }
 
@@ -93,7 +93,7 @@ public class ColorIdeAcceptanceTest {
 
     private void thenPatchIsAppliedAndRebootDialogIsShown() {
         verify(patcher).applyPatch();
-        verify(rebootDialog).showDialog();
+        verify(applicationRestarter).restart();
         verify(persistenceManager).setBoolean("showPatchDialog", false);
     }
 

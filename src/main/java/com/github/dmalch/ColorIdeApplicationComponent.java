@@ -17,7 +17,7 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
 
     private AcceptPatchingDialog acceptPatchingDialog = new AcceptPatchingDialog();
 
-    private RebootDialog rebootDialog = new RebootDialog();
+    private ApplicationRestarter applicationRestarter = new ApplicationRestarterImpl();
 
     private ColorIdePatcher patcher = new ColorIdePatcher();
 
@@ -30,7 +30,7 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
         if (shouldShowPatchDialog()) {
             if (userWantsToPatchClasses()) {
                 patcher.applyPatch();
-                rebootDialog.showDialog();
+                applicationRestarter.restart();
             }
             doNotShowPatchDialogAnyMore();
         }
@@ -81,12 +81,12 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
         this.acceptPatchingDialog = acceptPatchingDialog;
     }
 
-    public RebootDialog getRebootDialog() {
-        return rebootDialog;
+    public ApplicationRestarter getApplicationRestarter() {
+        return applicationRestarter;
     }
 
-    public void setRebootDialog(final RebootDialog rebootDialog) {
-        this.rebootDialog = rebootDialog;
+    public void setApplicationRestarter(final ApplicationRestarter applicationRestarter) {
+        this.applicationRestarter = applicationRestarter;
     }
 
     public ColorIdePatcher getPatcher() {

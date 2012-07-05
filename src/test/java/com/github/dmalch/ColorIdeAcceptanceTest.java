@@ -83,6 +83,7 @@ public class ColorIdeAcceptanceTest {
     private void thenPatchIsNotAppliedAndRebootDialogIsNotShown() {
         verify(patcher, never()).applyPatch();
         verify(rebootDialog, never()).showDialog();
+        verify(persistenceManager).setBoolean("showPatchDialog", false);
     }
 
     private void whenDiscardPatching() {

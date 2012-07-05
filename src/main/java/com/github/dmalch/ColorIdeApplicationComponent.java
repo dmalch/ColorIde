@@ -32,8 +32,8 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
                 patcher.applyPatch();
                 rebootDialog.showDialog();
             }
+            doNotShowPatchDialogAnyMore();
         }
-        doNotShowPatchDialogAnyMore();
     }
 
     private boolean userWantsToPatchClasses() {

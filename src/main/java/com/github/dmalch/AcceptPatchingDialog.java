@@ -1,6 +1,5 @@
 package com.github.dmalch;
 
-import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 
@@ -33,8 +32,8 @@ public class AcceptPatchingDialog {
     };
 
     public int showDialog() {
-        return Messages.showYesNoDialog("Color IDE plugin wants to patch your instance of Intellij IDEA", ApplicationBundle.message("exit.confirm.title"),
-                ApplicationBundle.message("command.exit"), "Cancel",
+        return Messages.showYesNoDialog("Color IDE plugin wants to patch your instance of Intellij IDEA", "Confirm patch",
+                "Patch", "Cancel",
                 Messages.getQuestionIcon(), option);
     }
 }

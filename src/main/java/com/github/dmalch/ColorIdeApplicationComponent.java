@@ -25,6 +25,18 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
     }
 
     public void initComponent() {
+        applyColorSchemeColorsToTree();
+
+        if (shouldShowPatchDialog()) {
+            if (Objects.equal(OK_EXIT_CODE, acceptPatchingDialog.showDialog())) {
+                patcher.applyPatch();
+                doNotShowPatchDialogAnyMore();
+                rebootDialog.showDialog();
+            }
+        }
+    }
+
+    private void applyColorSchemeColorsToTree() {
         final EditorColorsScheme globalScheme = colorSchemeManager.getGlobalColorScheme();
 
         colorSchemeManager.setUiProperty("Viewport.foreground", globalScheme.getDefaultForeground());
@@ -35,14 +47,6 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
 
         colorSchemeManager.setUiProperty("Tree.foreground", globalScheme.getDefaultForeground());
         colorSchemeManager.setUiProperty("Tree.background", globalScheme.getDefaultBackground());
-
-        if (shouldShowPatchDialog()) {
-            if (Objects.equal(OK_EXIT_CODE, acceptPatchingDialog.showDialog())) {
-                patcher.applyPatch();
-                doNotShowPatchDialogAnyMore();
-                rebootDialog.showDialog();
-            }
-        }
     }
 
     private void doNotShowPatchDialogAnyMore() {

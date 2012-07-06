@@ -1,5 +1,6 @@
 package com.github.dmalch;
 
+import com.intellij.openapi.ui.Messages;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -7,8 +8,7 @@ import org.mockito.Mock;
 
 import static com.github.dmalch.ColorIdeApplicationComponent.SHOW_PATCH_DIALOG;
 import static com.github.dmalch.ColorIdeApplicationComponent.USER_ACCEPTED_PATCHING;
-import static com.intellij.openapi.ui.DialogWrapper.CANCEL_EXIT_CODE;
-import static com.intellij.openapi.ui.DialogWrapper.OK_EXIT_CODE;
+import static com.intellij.openapi.ui.Messages.OK;
 import static org.mockito.Answers.RETURNS_MOCKS;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -147,7 +147,7 @@ public class ColorIdeAcceptanceTest {
     }
 
     private void whenDiscardPatching() {
-        when(acceptPatchingDialog.showDialog()).thenReturn(CANCEL_EXIT_CODE);
+        when(acceptPatchingDialog.showDialog()).thenReturn(Messages.CANCEL);
         whenStartColorIde();
     }
 
@@ -159,7 +159,7 @@ public class ColorIdeAcceptanceTest {
     }
 
     private void whenAcceptPatching() {
-        when(acceptPatchingDialog.showDialog()).thenReturn(OK_EXIT_CODE);
+        when(acceptPatchingDialog.showDialog()).thenReturn(OK);
         whenStartColorIde();
     }
 

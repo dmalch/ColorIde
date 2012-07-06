@@ -19,7 +19,7 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
 
     private ApplicationRestarter applicationRestarter = new ApplicationRestarterImpl();
 
-    private ColorIdePatcher patcher = new ColorIdePatcher();
+    private ColorIdePatcher patcher = new ColorIdePatcherImpl();
 
     public ColorIdeApplicationComponent() {
     }
@@ -58,6 +58,14 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
     }
 
     private boolean shouldShowPatchDialog() {
+        return checkShowPatchDialogProperty() || filesAreNotPatched();
+    }
+
+    private boolean filesAreNotPatched() {
+        return !patcher.checkFilesArePatched();
+    }
+
+    private boolean checkShowPatchDialogProperty() {
         return persistenceManager.getBoolean(SHOW_PATCH_DIALOG, true);
     }
 

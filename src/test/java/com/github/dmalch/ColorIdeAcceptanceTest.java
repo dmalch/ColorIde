@@ -37,7 +37,7 @@ public class ColorIdeAcceptanceTest {
     }
 
     @Test
-    public void testUserDialogIsShownAtFirstStart() throws Exception {
+    public void testPatchDialogIsShownAtFirstStart() throws Exception {
         givenColorIdeIsRunFirstTime();
 
         whenStartColorIde();
@@ -64,12 +64,30 @@ public class ColorIdeAcceptanceTest {
     }
 
     @Test
-    public void testUserDialogIsNotShownAfterFirstRun() throws Exception {
+    public void testPatchDialogIsNotShownAfterFirstRun() throws Exception {
         givenColorIdeIsRunAfterFirstTime();
 
         whenStartColorIde();
 
         thenDialogIsNotShown();
+    }
+
+    @Test
+    public void testPatchDialogNotShownAfterFirstRunIfPatchedFilesWereChanged() throws Exception {
+        givenColorIdeIsRunAfterFirstTime();
+        givenPatchedFilesWereChanged();
+
+        whenStartColorIde();
+
+        thenDialogIsShown();
+    }
+
+    private void givenPatchedFilesWereChanged() {
+        when(patcher.checkFilesArePatched()).thenReturn(false);
+    }
+
+    private void givenFilesWerePatched() {
+        when(patcher.checkFilesArePatched()).thenReturn(true);
     }
 
     private void thenDialogIsNotShown() {
@@ -78,6 +96,7 @@ public class ColorIdeAcceptanceTest {
 
     private void givenColorIdeIsRunAfterFirstTime() {
         when(persistenceManager.getBoolean("showPatchDialog", true)).thenReturn(false);
+        givenFilesWerePatched();
     }
 
     private void thenPatchIsNotAppliedAndRebootDialogIsNotShown() {

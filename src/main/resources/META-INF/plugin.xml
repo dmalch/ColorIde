@@ -20,4 +20,8 @@
             <implementation-class>com.github.dmalch.ColorIdeApplicationComponent</implementation-class>
         </component>
     </application-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable instance="com.github.dmalch.ColorIdeSystemSettings"/>
+    </extensions>
 </idea-plugin>

@@ -1,5 +1,6 @@
 package com.github.dmalch;
 
+import com.intellij.openapi.options.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +14,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -26,6 +28,9 @@ public class ColorIdeSystemSettingsTest {
 
     @Mock
     private ColorIdePatcher patcher;
+
+    @Mock
+    private ApplicationRestarter restarter;
 
     @Before
     public void setUp() throws Exception {
@@ -70,6 +75,26 @@ public class ColorIdeSystemSettingsTest {
         whenResetSettings();
 
         thenCheckBoxIsSelected();
+    }
+
+    @Test
+    public void testWhenUserAppliesPatchingThenPatchingIsPerformed() throws Exception {
+        givenUserRejectedPatch();
+        givenNoPatchedFilesFound();
+
+        whenUserAppliesPatching();
+
+        thenPatchingIsPerformed();
+    }
+
+    private void thenPatchingIsPerformed() {
+        verify(patcher).applyPatch();
+        verify(persistenceManager).setBoolean(USER_ACCEPTED_PATCHING, true);
+        verify(restarter).askToRestart();
+    }
+
+    private void whenUserAppliesPatching() throws ConfigurationException {
+        colorIdeSystemSettings.apply();
     }
 
     private void givenPatchedFilesFound() {

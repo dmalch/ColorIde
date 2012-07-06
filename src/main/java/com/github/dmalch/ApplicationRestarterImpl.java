@@ -7,4 +7,9 @@ public class ApplicationRestarterImpl implements ApplicationRestarter {
     public void restart() {
         ApplicationManagerEx.getApplicationEx().restart();
     }
+
+    @Override
+    public void askToRestart() {
+
+    }
 }

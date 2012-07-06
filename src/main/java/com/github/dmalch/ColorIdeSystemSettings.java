@@ -20,6 +20,8 @@ public class ColorIdeSystemSettings implements Configurable {
 
     private ColorIdePatcher patcher = new ColorIdePatcherImpl();
 
+    private ApplicationRestarter restarter = new ApplicationRestarterImpl();
+
     private ThreeStateCheckBox.State initialState;
 
     @Nls
@@ -53,6 +55,11 @@ public class ColorIdeSystemSettings implements Configurable {
 
     @Override
     public void apply() throws ConfigurationException {
+        if (Objects.equal(shouldPatchIdea.getState(), SELECTED)) {
+            userHasAcceptedPatching();
+            patcher.applyPatch();
+            restarter.askToRestart();
+        }
     }
 
     @Override
@@ -75,6 +82,10 @@ public class ColorIdeSystemSettings implements Configurable {
     public void disposeUIResources() {
     }
 
+    private void userHasAcceptedPatching() {
+        persistenceManager.setBoolean(USER_ACCEPTED_PATCHING, true);
+    }
+
     public ThreeStateCheckBox getShouldPatchIdea() {
         return shouldPatchIdea;
     }
@@ -85,5 +96,9 @@ public class ColorIdeSystemSettings implements Configurable {
 
     public void setPersistenceManager(final PersistenceManager persistenceManager) {
         this.persistenceManager = persistenceManager;
+    }
+
+    public void setRestarter(final ApplicationRestarter restarter) {
+        this.restarter = restarter;
     }
 }

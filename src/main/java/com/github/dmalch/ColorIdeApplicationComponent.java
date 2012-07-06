@@ -9,7 +9,8 @@ import static com.intellij.openapi.ui.DialogWrapper.OK_EXIT_CODE;
 
 public class ColorIdeApplicationComponent implements ApplicationComponent {
 
-    public static final String SHOW_PATCH_DIALOG = "showPatchDialog";
+    public static final String SHOW_PATCH_DIALOG = "colorIde.showPatchDialog";
+    public static final String USER_ACCEPTED_PATCHING = "colorIde.userAcceptedPatching";
 
     private ColorSchemeManager colorSchemeManager = new ColorSchemeManagerImpl();
 
@@ -29,11 +30,26 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
 
         if (shouldShowPatchDialog()) {
             if (userWantsToPatchClasses()) {
+                userHasAcceptedPatching();
                 patcher.applyPatch();
                 applicationRestarter.restart();
+            } else {
+                userHasRejectedPatching();
             }
             doNotShowPatchDialogAnyMore();
         }
+    }
+
+    private void userHasRejectedPatching() {
+        persistenceManager.setBoolean(USER_ACCEPTED_PATCHING, false);
+    }
+
+    private void userHasAcceptedPatching() {
+        persistenceManager.setBoolean(USER_ACCEPTED_PATCHING, true);
+    }
+
+    private boolean isUserHasAcceptedPatching() {
+        return persistenceManager.getBoolean(USER_ACCEPTED_PATCHING, true);
     }
 
     private boolean userWantsToPatchClasses() {
@@ -58,7 +74,7 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
     }
 
     private boolean shouldShowPatchDialog() {
-        return checkShowPatchDialogProperty() || filesAreNotPatched();
+        return isUserHasAcceptedPatching() && (checkShowPatchDialogProperty() || filesAreNotPatched());
     }
 
     private boolean filesAreNotPatched() {

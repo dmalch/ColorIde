@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static com.github.dmalch.ColorIdeApplicationComponent.SHOW_PATCH_DIALOG;
+import static com.github.dmalch.ColorIdeApplicationComponent.USER_ACCEPTED_PATCHING;
 import static com.intellij.openapi.ui.DialogWrapper.CANCEL_EXIT_CODE;
 import static com.intellij.openapi.ui.DialogWrapper.OK_EXIT_CODE;
 import static org.mockito.Answers.RETURNS_MOCKS;
@@ -55,7 +57,7 @@ public class ColorIdeAcceptanceTest {
     }
 
     @Test
-    public void testWhenUserDoesNotAcceptPatchingThenPatchIsNotAppliedAndRebootDialogIsNotShown() {
+    public void testWhenUserRejectsPatchingThenPatchIsNotAppliedAndRebootDialogIsNotShown() {
         givenColorIdeIsRunFirstTime();
 
         whenDiscardPatching();
@@ -73,13 +75,32 @@ public class ColorIdeAcceptanceTest {
     }
 
     @Test
-    public void testPatchDialogNotShownAfterFirstRunIfPatchedFilesWereChanged() throws Exception {
+    public void testPatchDialogIsShownAfterFirstRunWhenPatchedFilesWereChanged() throws Exception {
         givenColorIdeIsRunAfterFirstTime();
         givenPatchedFilesWereChanged();
 
         whenStartColorIde();
 
         thenDialogIsShown();
+    }
+
+    @Test
+    public void testPatchDialogIsNotShownAfterFirstRunWhenUserRejectedPatchEvenIfPatchedFilesWereChanged() throws Exception {
+        givenColorIdeIsRunAfterFirstTime();
+        givenUserRejectedPatching();
+        givenPatchedFilesWereChanged();
+
+        whenStartColorIde();
+
+        thenDialogIsNotShown();
+    }
+
+    private void givenUserRejectedPatching() {
+        when(persistenceManager.getBoolean(eq(USER_ACCEPTED_PATCHING), anyBoolean())).thenReturn(false);
+    }
+
+    private void givenUserAcceptedPatching() {
+        when(persistenceManager.getBoolean(eq(USER_ACCEPTED_PATCHING), anyBoolean())).thenReturn(true);
     }
 
     private void givenPatchedFilesWereChanged() {
@@ -95,14 +116,16 @@ public class ColorIdeAcceptanceTest {
     }
 
     private void givenColorIdeIsRunAfterFirstTime() {
-        when(persistenceManager.getBoolean("showPatchDialog", true)).thenReturn(false);
+        when(persistenceManager.getBoolean(eq(SHOW_PATCH_DIALOG), anyBoolean())).thenReturn(false);
         givenFilesWerePatched();
+        givenUserAcceptedPatching();
     }
 
     private void thenPatchIsNotAppliedAndRebootDialogIsNotShown() {
         verify(patcher, never()).applyPatch();
         verify(applicationRestarter, never()).restart();
-        verify(persistenceManager).setBoolean("showPatchDialog", false);
+        verify(persistenceManager).setBoolean(SHOW_PATCH_DIALOG, false);
+        verify(persistenceManager).setBoolean(USER_ACCEPTED_PATCHING, false);
     }
 
     private void whenDiscardPatching() {
@@ -113,7 +136,8 @@ public class ColorIdeAcceptanceTest {
     private void thenPatchIsAppliedAndRebootDialogIsShown() {
         verify(patcher).applyPatch();
         verify(applicationRestarter).restart();
-        verify(persistenceManager).setBoolean("showPatchDialog", false);
+        verify(persistenceManager).setBoolean(SHOW_PATCH_DIALOG, false);
+        verify(persistenceManager).setBoolean(USER_ACCEPTED_PATCHING, true);
     }
 
     private void whenAcceptPatching() {
@@ -130,6 +154,8 @@ public class ColorIdeAcceptanceTest {
     }
 
     private void givenColorIdeIsRunFirstTime() {
-        when(persistenceManager.getBoolean("showPatchDialog", true)).thenReturn(true);
+        when(persistenceManager.getBoolean(eq(SHOW_PATCH_DIALOG), anyBoolean())).thenReturn(true);
+        givenPatchedFilesWereChanged();
+        givenUserAcceptedPatching();
     }
 }

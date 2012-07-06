@@ -48,7 +48,7 @@ public class ColorIdeAcceptanceTest {
     }
 
     @Test
-    public void testWhenUserAcceptsPatchingThenPatchIsAppliedAndRebootDialogIsShown() {
+    public void testWhenUserAcceptsPatchingThenPatchIsAppliedAndIdeIsRebooted() {
         givenColorIdeIsRunFirstTime();
 
         whenAcceptPatching();
@@ -57,7 +57,7 @@ public class ColorIdeAcceptanceTest {
     }
 
     @Test
-    public void testWhenUserRejectsPatchingThenPatchIsNotAppliedAndRebootDialogIsNotShown() {
+    public void testWhenUserRejectsPatchingThenPatchIsNotAppliedAndIdeIsNotRebooted() {
         givenColorIdeIsRunFirstTime();
 
         whenDiscardPatching();

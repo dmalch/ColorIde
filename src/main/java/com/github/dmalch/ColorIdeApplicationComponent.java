@@ -35,6 +35,9 @@ public class ColorIdeApplicationComponent implements ApplicationComponent {
                 applicationRestarter.restart();
             } else {
                 userHasRejectedPatching();
+                if (patcher.applyRollback()) {
+                    applicationRestarter.restart();
+                }
             }
             doNotShowPatchDialogAnyMore();
         }

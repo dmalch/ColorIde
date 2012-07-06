@@ -9,4 +9,9 @@ public class ColorIdePatcherImpl implements ColorIdePatcher {
     public boolean checkFilesArePatched() {
         return true;
     }
+
+    @Override
+    public boolean applyRollback() {
+        return false;
+    }
 }

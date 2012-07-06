@@ -57,12 +57,22 @@ public class ColorIdeAcceptanceTest {
     }
 
     @Test
-    public void testWhenUserRejectsPatchingThenPatchIsNotAppliedAndIdeIsNotRebooted() {
+    public void testWhenUserRejectsPatchingThenPatchIsRolledBackAndIfNoChangesIdeIsNotRebooted() {
         givenColorIdeIsRunFirstTime();
 
         whenDiscardPatching();
 
-        thenPatchIsNotAppliedAndRebootDialogIsNotShown();
+        thenPatchIsNotAppliedAndRebootIsNotPerformed();
+    }
+
+    @Test
+    public void testWhenUserRejectsPatchingThenPatchIsRolledBackAndIfThereAreChangesIdeIsRebooted() {
+        givenColorIdeIsRunFirstTime();
+        givenSeveralFilesArePatched();
+
+        whenDiscardPatching();
+
+        thenPatchIsNotAppliedAndRebootIsPerformed();
     }
 
     @Test
@@ -77,7 +87,7 @@ public class ColorIdeAcceptanceTest {
     @Test
     public void testPatchDialogIsShownAfterFirstRunWhenPatchedFilesWereChanged() throws Exception {
         givenColorIdeIsRunAfterFirstTime();
-        givenPatchedFilesWereChanged();
+        givenNotAllFilesWerePatched();
 
         whenStartColorIde();
 
@@ -88,11 +98,15 @@ public class ColorIdeAcceptanceTest {
     public void testPatchDialogIsNotShownAfterFirstRunWhenUserRejectedPatchEvenIfPatchedFilesWereChanged() throws Exception {
         givenColorIdeIsRunAfterFirstTime();
         givenUserRejectedPatching();
-        givenPatchedFilesWereChanged();
+        givenNotAllFilesWerePatched();
 
         whenStartColorIde();
 
         thenDialogIsNotShown();
+    }
+
+    private void givenSeveralFilesArePatched() {
+        when(patcher.applyRollback()).thenReturn(true);
     }
 
     private void givenUserRejectedPatching() {
@@ -103,7 +117,7 @@ public class ColorIdeAcceptanceTest {
         when(persistenceManager.getBoolean(eq(USER_ACCEPTED_PATCHING), anyBoolean())).thenReturn(true);
     }
 
-    private void givenPatchedFilesWereChanged() {
+    private void givenNotAllFilesWerePatched() {
         when(patcher.checkFilesArePatched()).thenReturn(false);
     }
 
@@ -115,16 +129,20 @@ public class ColorIdeAcceptanceTest {
         verify(acceptPatchingDialog, never()).showDialog();
     }
 
-    private void givenColorIdeIsRunAfterFirstTime() {
-        when(persistenceManager.getBoolean(eq(SHOW_PATCH_DIALOG), anyBoolean())).thenReturn(false);
-        givenFilesWerePatched();
-        givenUserAcceptedPatching();
+    private void thenPatchIsNotAppliedAndRebootIsNotPerformed() {
+        thenPatchIsNotApplied();
+        verify(applicationRestarter, never()).restart();
     }
 
-    private void thenPatchIsNotAppliedAndRebootDialogIsNotShown() {
-        verify(patcher, never()).applyPatch();
-        verify(applicationRestarter, never()).restart();
+    private void thenPatchIsNotAppliedAndRebootIsPerformed() {
+        thenPatchIsNotApplied();
+        verify(applicationRestarter).restart();
+    }
+
+    private void thenPatchIsNotApplied() {
+        verify(patcher).applyRollback();
         verify(persistenceManager).setBoolean(SHOW_PATCH_DIALOG, false);
+        verify(patcher, never()).applyPatch();
         verify(persistenceManager).setBoolean(USER_ACCEPTED_PATCHING, false);
     }
 
@@ -155,7 +173,13 @@ public class ColorIdeAcceptanceTest {
 
     private void givenColorIdeIsRunFirstTime() {
         when(persistenceManager.getBoolean(eq(SHOW_PATCH_DIALOG), anyBoolean())).thenReturn(true);
-        givenPatchedFilesWereChanged();
+        givenNotAllFilesWerePatched();
+        givenUserAcceptedPatching();
+    }
+
+    private void givenColorIdeIsRunAfterFirstTime() {
+        when(persistenceManager.getBoolean(eq(SHOW_PATCH_DIALOG), anyBoolean())).thenReturn(false);
+        givenFilesWerePatched();
         givenUserAcceptedPatching();
     }
 }

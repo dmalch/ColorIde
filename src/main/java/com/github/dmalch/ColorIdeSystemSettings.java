@@ -16,9 +16,9 @@ public class ColorIdeSystemSettings implements Configurable {
     private JLabel headerText;
     private ThreeStateCheckBox shouldPatchIdea;
 
-    private final PersistenceManager persistenceManager = new PersistenceManagerImpl();
+    private PersistenceManager persistenceManager = new PersistenceManagerImpl();
 
-    private final ColorIdePatcher patcher = new ColorIdePatcherImpl();
+    private ColorIdePatcher patcher = new ColorIdePatcherImpl();
 
     private ThreeStateCheckBox.State initialState;
 
@@ -73,5 +73,17 @@ public class ColorIdeSystemSettings implements Configurable {
 
     @Override
     public void disposeUIResources() {
+    }
+
+    public ThreeStateCheckBox getShouldPatchIdea() {
+        return shouldPatchIdea;
+    }
+
+    public void setPatcher(final ColorIdePatcher patcher) {
+        this.patcher = patcher;
+    }
+
+    public void setPersistenceManager(final PersistenceManager persistenceManager) {
+        this.persistenceManager = persistenceManager;
     }
 }

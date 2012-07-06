@@ -7,9 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static com.github.dmalch.ColorIdeApplicationComponent.USER_ACCEPTED_PATCHING;
-import static com.intellij.util.ui.ThreeStateCheckBox.State.DONT_CARE;
-import static com.intellij.util.ui.ThreeStateCheckBox.State.NOT_SELECTED;
-import static com.intellij.util.ui.ThreeStateCheckBox.State.SELECTED;
+import static com.intellij.util.ui.ThreeStateCheckBox.State.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyBoolean;
@@ -82,9 +80,25 @@ public class ColorIdeSystemSettingsTest {
         givenUserRejectedPatch();
         givenNoPatchedFilesFound();
 
-        whenUserAppliesPatching();
+        whenUserAppliesPatch();
 
         thenPatchingIsPerformed();
+    }
+
+    @Test
+    public void testWhenUserRollsBackPatchThenPatchingIsRolledBack() throws Exception {
+        givenUserAcceptedPatch();
+        givenPatchedFilesFound();
+
+        whenUserAppliesRollback();
+
+        thenRollBackIsPerformed();
+    }
+
+    private void thenRollBackIsPerformed() {
+        verify(patcher).applyRollback();
+        verify(persistenceManager).setBoolean(USER_ACCEPTED_PATCHING, false);
+        verify(restarter).askToRestart();
     }
 
     private void thenPatchingIsPerformed() {
@@ -93,7 +107,15 @@ public class ColorIdeSystemSettingsTest {
         verify(restarter).askToRestart();
     }
 
-    private void whenUserAppliesPatching() throws ConfigurationException {
+    private void whenUserAppliesRollback() throws ConfigurationException {
+        colorIdeSystemSettings.reset();
+        colorIdeSystemSettings.getShouldPatchIdea().setState(NOT_SELECTED);
+        colorIdeSystemSettings.apply();
+    }
+
+    private void whenUserAppliesPatch() throws ConfigurationException {
+        colorIdeSystemSettings.reset();
+        colorIdeSystemSettings.getShouldPatchIdea().setState(SELECTED);
         colorIdeSystemSettings.apply();
     }
 

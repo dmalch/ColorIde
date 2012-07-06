@@ -59,6 +59,10 @@ public class ColorIdeSystemSettings implements Configurable {
             userHasAcceptedPatching();
             patcher.applyPatch();
             restarter.askToRestart();
+        } else if (Objects.equal(shouldPatchIdea.getState(), NOT_SELECTED)) {
+            userHasRejectedPatching();
+            patcher.applyRollback();
+            restarter.askToRestart();
         }
     }
 
@@ -84,6 +88,10 @@ public class ColorIdeSystemSettings implements Configurable {
 
     private void userHasAcceptedPatching() {
         persistenceManager.setBoolean(USER_ACCEPTED_PATCHING, true);
+    }
+
+    private void userHasRejectedPatching() {
+        persistenceManager.setBoolean(USER_ACCEPTED_PATCHING, false);
     }
 
     public ThreeStateCheckBox getShouldPatchIdea() {

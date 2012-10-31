@@ -3,11 +3,14 @@
 
     <id>ColorIde</id>
 
-    <description>Applies editor background color to all tree views</description>
+    <description>Applies editor background color to all tree views. Patches IDEA. Intended to be used in combo with Color IDE plugin. When Color IDE is installed several
+        UI issues appears. These issues can be fixed by only changing IDEA source code or files. This plugin fixes
+        issues by patching IDE installation. All patches are contributed into IDEA source code and can appear in new
+        versions by default.</description>
 
-    <change-notes>Added support of idea 10.5</change-notes>
+    <change-notes>Merged with Patch IDE</change-notes>
 
-    <version>2.3</version>
+    <version>2.4</version>
 
     <idea-version since-build="107.105"/>
 
@@ -19,9 +22,13 @@
         <component>
             <implementation-class>com.github.dmalch.ColorIdeApplicationComponent</implementation-class>
         </component>
+        <component>
+            <interface-class>com.github.dmalch.PatchIdeApplicationComponent</interface-class>
+            <implementation-class>com.github.dmalch.PatchIdeApplicationComponentImpl</implementation-class>
+        </component>
     </application-components>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationConfigurable instance="com.github.dmalch.ColorIdeSystemSettings"/>
+        <applicationConfigurable instance="com.github.dmalch.PatchIdeSystemSettings"/>
     </extensions>
 </idea-plugin>
